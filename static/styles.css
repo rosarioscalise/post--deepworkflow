@@ -24,6 +24,11 @@ d-figure > figure {
   margin-top: 0;
   margin-bottom: 0;
 }
+
+d-title {
+  padding-bottom: 0.5rem;
+}
+
 code {
   display: inline-block;
   background-color:#fff9ed;
