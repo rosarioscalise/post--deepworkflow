@@ -1,0 +1,134 @@
+<!doctype html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style id="distill-article-specific-styles">
+    <%=require("../static/styles.css") %>
+  </style>
+  <script src="https://distill.pub/template.v2.js"></script>
+</head>
+
+<body>
+
+  <d-front-matter>
+    <script type="text/json">
+      <%= JSON.stringify(require("./frontmatter.json"), null, 4) %>
+    </script>
+  </d-front-matter>
+
+  <d-title>
+    <h1>Deep Model Workflow </h1>
+    <p>A process for conducting experiments requiring quick iteration over deep models.</p>
+  </d-title>
+
+  <d-article>
+	<p>
+	Why? Speedy Iteration. Reproducability. Automatic archival.
+	</p>
+
+    <h4>Directory Structure</h4>
+
+	<p>
+    Here's the general format of my directory structure: </br>
+    </p>
+    <pre>
+  📂 root_dir/ (~/WRK)
+  └📁 generative_lvms/ <a href=https://github.com/romesc-CMU/MuSHR_cvae>[repo]</a>
+  └📁 &ltproj&gt_dataset/ <a href=https://github.com/romesc-CMU/MuSHR_cvae>[repo]</a>
+  └📁 &ltproj&gt_results/ <a href=https://github.com/romesc-CMU/MuSHR_cvae>[repo]</a>
+    </pre>
+
+    <h4>Getting Set Up</h4>
+
+    <h4>Workflow</h4>
+
+	<figure>
+      <%= require("../static/images/DeepWorkflow.svg") %>
+    </figure>
+        <h5>Dataset Interface</h5>
+		<p>
+		Since research should inherently be collaborative, the aim was to define a dataset interface to eliminate ambiguity for a would-be collabator. The philosophy behind the dataset repo is to be version sensitive (i.e. retain older copies of a dataset for easy access), but do so in a temporally flat structure (as opposed to how normal version control compresses inter-temporally). This enables quickly comparing models trained on different versions of a dataset perhaps generated on different days, but otherwise identical in structure. This is why the first directory level is the date of generation. Additionally, including all important parameters in the second level dataset folder name wraps the pertinent information directly in the path. This is useful both for at-a-glance human readability and quick'ndirty scraping of the file path if a parameter is needed during training. An alternative would be to include configuration <code>.yaml</code> files in each dataset folder (alongside the <code>.npy</code> s).   What we end up wanting is something in between a git repository and a database. Summary of qualities:
+		<ol>
+			<li>Archival.
+			<li>All versions accessable without checkout or reversion. 
+            <li>Always pushable. (no merge issues)
+			<li>Always pullable. 
+		</ol>
+
+		</p>
+        <p>
+        An example of the file structure in the dataset directory:
+        </p>
+
+		<pre>
+		📂 &ltproj&gt_dataset/
+		├── 📂 2020-02-14/
+		│   ├── 📂 unimodal_p1_p2_p3/
+		│   │   ├── data_0.npy 
+		│   │   ├── conditional_type0_0.npy 
+		│   │  	└── conditional_type1_0.npy 
+		│   └── 📂 multimodal_p1_p2_p3/
+		│       ├── data_0.npy 
+		│       ├── data_1.npy 
+		│       ├── data_M.npy 
+		│     	└── conditional_type0_01M.npy 
+		├── 📁 2020-02-15/
+		└── 📁 2020-02-16/
+		</pre>
+        <p>
+        An example of the foldername <code>unimodal_p1_p2_p3</code> in practice might adopt the shorthand <code>gaussian_M1_S3</code> if this dataset is drawn from $\sim \mathcal{N}(1.0,3.0)$.
+        </p>
+        <p>
+        <code>data_m.npy</code> is a numpy array corresponding to a set of samples $D = \{ x^{(i)} \}_{i=1}^{N}$ drawn from a particular distribution $\sim p(x)$. Ideally, if there is only one unimodal distribution we care about, there is only one <code>data_0.npy</code>. If not, each <code>data_m.npy</code> might be sampled around a different mode of the distribution or might correspond to the data conditioned on a particular context $c$. In the directory structure above, the first dataset <code>unimodal_p1_p2_p3</code> is sampled from a unimodal distribution, and as a result only a singular <code>data_0.npy</code> is necessary. In the second dataset <code>multimodal_p1_p2_p3</code> has multiple modes to sample from and consequentially multiple <code>data_m.npy</code>.
+		</p>
+
+		<p>
+        Similarly, if we plan to model a conditional distribution $p(x|c)$, <code>conditional_type0_0.npy</code> is a numpy array corresponding to the values taken on by the conditional $c$ when sampling from the marginalized data distribution $p(x)$. <code>type0</code> refers to the conditional type (e.g. cameraImg or environment state) and the prepended <code>_01M</code> implies which <code>data_m</code> s the conditional applies to.
+        </p>
+
+		<p>
+        Each row (<code>axis=0</code>) in an array (or tensor) should correspond to a sampled datapoint. In the following example, the array contains 3 datapoints $x \in SE(2)$.
+		</p>
+        <object type="text/html" height=310 data="https://gist.githack.com/romesc-CMU/d368905a567798da24d44d876b2fd054/raw/1147be7d0a8f097261771cb4afa0e74943af18da/array_example.html"></object>
+
+        <h1>Backend</h1>
+
+        <h5>Frontend</h5>
+
+	<h4>Automation</h4>
+
+    <h4>Rules</h4>
+	<ol>
+	    <li>Each experiment should be fully encapsulated in its configuration file.</li>	
+	    <li>Autoplotting/saving csv of all important information (or watching).</li>	
+	</ol>
+
+  <d-appendix>
+    <h3>Acknowledgments</h3>
+    <p>
+      We are deeply grateful to...
+    </p>
+
+    <p>
+      Many of our diagrams are based on...
+    </p>
+
+    <h3>Author Contributions</h3>
+    <p>
+      <b>Research:</b> Alex developed ...
+    </p>
+
+    <p>
+      <b>Writing & Diagrams:</b> The text was initially drafted by...
+    </p>
+
+
+    <d-footnote-list></d-footnote-list>
+    <d-citation-list></d-citation-list>
+  </d-appendix>
+
+  <!-- bibliography will be inlined during Distill pipeline's pre-rendering -->
+  <d-bibliography src="bibliography.bib"></d-bibliography>
+
+</body>

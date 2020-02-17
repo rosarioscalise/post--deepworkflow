@@ -1,0 +1,27 @@
+{
+  "title": "Deep Workflow!",
+  "description": "A process for conducting experiments requiring quick iteration over deep models.",
+  "password": "",
+  "authors": [
+    {
+      "author": "Rosario Scalise",
+      "authorURL": "http://rosari.ooo/",
+      "affiliation": "University of Washington",
+      "affiliationURL": "https://personalrobotics.cs.washington.edu"
+    }
+  ],
+  "katex": {
+    "delimiters": [
+      {
+        "left": "$",
+        "right": "$",
+        "display": false
+      },
+      {
+        "left": "$$",
+        "right": "$$",
+        "display": true
+      }
+    ]
+  }
+}
